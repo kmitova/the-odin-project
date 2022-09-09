@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p>
+      <a
+        href="https://www.youtube.com/watch?v=wdvruTuWvW8&ab_channel=CodewithAniaKub%C3%B3w"
+        >Source</a
+      >
+    </p>
+
+    <button id="btn">Show countries</button>
+    <div class="feed"></div>
+
+    <script>
+      const btn = document.getElementById("btn");
+
+      btn.addEventListener("click", showCountries);
+
+      function showCountries() {
+        let xhr = new XMLHttpRequest();
+
+        xhr.open("GET", "https://restcountries.com/v3.1/all", true);
+
+        xhr.onload = function () {
+          if (xhr.status == 200) {
+            console.log("success");
+            let countries = JSON.parse(this.response);
+            console.log(countries);
+            countries.forEach((country) => {
+              const card = document.createElement("div");
+              const img = document.createElement("img");
+              card.innerHTML = country.name.common;
+              img.src = country.flags.png;
+              card.appendChild(img);
+              document.querySelector(".feed").appendChild(card);
+            });
+          }
+        };
+
+        xhr.send();
+      }
+
+      // WITH FETCH API (USED TODAYS INSTEAD OF NEW XMLHTTPREQUEST)
+      fetch("https://restcountries.com/v3.1/all")
+        .then((response) => {
+          return response.json();
+        })
+        .then((json) => {
+          let countries = json;
+          console.log(countries);
+        })
+        .catch((err) => {
+          console.log("Errors: " + err.message);
+        });
+
+      // with async and await, which are used instead of promises
+      async function getData() {
+        const response = await fetch("https://restcountries.com/v3.1/all");
+        const data = await response.json();
+        return data;
+      }
+
+      getData()
+        .then((data) => console.log(data))
+        .catch((err) => console.log("Errors: " + err.message));
+    </script>
+  </body>
+</html>
