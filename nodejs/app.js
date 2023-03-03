@@ -1,3 +1,5 @@
+// COMMAND TO RUN NODEMON: npm run auto
+
 console.log("123");
 
 const axios = require("axios");
@@ -21,3 +23,16 @@ axios
   .catch((error) => {
     console.error(error);
   });
+
+//  event emitter
+
+const EventEmitter = require("events");
+
+const eventEmitter = new EventEmitter();
+
+eventEmitter.on("start", (start, end) => {
+  console.log(`started from ${start} to ${end}`);
+});
+
+eventEmitter.emit("start", 1, 100);
+eventEmitter.eventNames();
