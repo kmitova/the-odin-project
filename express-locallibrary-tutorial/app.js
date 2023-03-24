@@ -10,7 +10,20 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 const catalogRouter = require("./routes/catalog");
 
+const compression = require("compression");
+const helmet = require("helmet");
+
 var app = express();
+
+var RateLimit = require("express-rate-limit");
+var limiter = RateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 20,
+});
+// Apply rate limiter to all requests
+app.use(limiter);
+
+app.use(helmet());
 
 // Set up mongoose connection
 const mongoose = require("mongoose");
@@ -30,6 +43,7 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(compression()); // Compress all routes
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
